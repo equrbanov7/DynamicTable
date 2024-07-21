@@ -13,6 +13,8 @@ const addUserBtn = document.querySelector("#addUserBtn")
 const exampleModal = document.querySelector("#exampleModal")
 const addUserToJsonData = document.querySelector("#addUserToJsonData")
 const editUserBtn = document.querySelector("#editUserBtn")
+const dropdownItems = document.querySelectorAll('.dropdown-item');
+const dropdownButton = document.getElementById('dropdownFilterButton');
 const sortIcon = document.querySelector("#sortIcon")
 
 
@@ -26,13 +28,16 @@ const birthdateError = document.getElementById('birthdateError');
 
 const ENUMS = {
     asc: "ASC",
-    desc: "DESC"
+    desc: "DESC",
+    yes: "yes",
+    no: "no"
 }
 
 let debounceTimer;
 
 let sortKey = '';
 let sortType = '';
+let filterType = '';
 let countOfClickedSort = 0
 let currentPage = 1;
 let totalPage = 0;
@@ -167,32 +172,57 @@ function checkFormInputValidation({
     return validationCheck;
 }
 
+function filterDataByAge(data, ageLimit = 65, isRetired = true) {
+    const currentDate = new Date();
+    return data.filter(item => {
+        const birthDate = new Date(item.birthdate);
+        let age = currentDate.getFullYear() - birthDate.getFullYear();
+        const monthDifference = currentDate.getMonth() - birthDate.getMonth();
+
+        if (monthDifference < 0 || (monthDifference === 0 && currentDate.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        return isRetired ? age > ageLimit : age < ageLimit;
+    });
+}
 
 
-async function generateTableData(page = 1, limit = 10, searchData = '', sortKey = '', sortType = '') {
+async function generateTableData(page = 1, limit = 10, searchData = '', sortKey = '', sortType = '', filter = '') {
 
     const tableUserDatas = await fetchRawData(BASE_URL);
     totalPage = Math.ceil(tableUserDatas.length / limit);
 
 
 
-    const filteredDataBySearch = tableUserDatas.filter(user =>
+    let filteredDataBySearch = tableUserDatas.filter(user =>
         user.name.toLowerCase().includes(searchData.toLowerCase()) ||
         user.email.toLowerCase().includes(searchData.toLowerCase())
     );
 
 
-    console.log(sortKey, sortType,sortIcon, "sorttttttt")
+    if (filter) {
+        if (filter === ENUMS.yes) {
+
+            filteredDataBySearch = filterDataByAge(filteredDataBySearch, 65, true);
+        } else if (filter === ENUMS.no) {
+            filteredDataBySearch = filterDataByAge(filteredDataBySearch, 65, false);
+
+        }
+    }
+
+
+    //console.log(filteredDataBySearch, "Filtered", page)
 
     if (sortKey && sortType) {
         if (sortKey === "birthdate") {
             if (sortType === ENUMS.desc) {
-                console.log(sortType, sortKey, "birth desc");
-                sortIcon.src='./Images/arrow-1.svg'
+                // console.log(sortType, sortKey, "birth desc");
+                sortIcon.src = './Images/arrow-1.svg'
                 filteredDataBySearch.sort((a, b) => new Date(b.birthdate) - new Date(a.birthdate));
             } else if (sortType === ENUMS.asc) {
-                console.log(sortType, sortKey, "birth asc");
-                 sortIcon.src='./Images/arrow-3.svg'
+                // console.log(sortType, sortKey, "birth asc");
+                sortIcon.src = './Images/arrow-3.svg'
                 filteredDataBySearch.sort((a, b) => new Date(a.birthdate) - new Date(b.birthdate));
             }
 
@@ -200,9 +230,8 @@ async function generateTableData(page = 1, limit = 10, searchData = '', sortKey 
 
 
     } else {
-        console.log("default")
-      
-         sortIcon.src='./Images/arrow-2.svg'
+
+        sortIcon.src = './Images/arrow-2.svg'
         filteredDataBySearch.sort((a, b) => new Date(b.createUserDate) - new Date(a.createUserDate));
 
     }
@@ -259,7 +288,6 @@ async function generateTableData(page = 1, limit = 10, searchData = '', sortKey 
     });
 
     prevBtn.disabled = page === 1;
-    nextBtn.disabled = page === totalPage;
 
     if (totalPage === 1 || totalPage === 0 || generatedTableUserData.length < itemsPerPage) {
         prevBtn.style.display = 'none'
@@ -278,6 +306,16 @@ async function generateTableData(page = 1, limit = 10, searchData = '', sortKey 
 
     if (page > 1) {
         prevBtn.style.display = 'block'
+    }
+
+    if (page === totalPage) {
+        nextBtn.disabled = page === totalPage;
+        nextBtn.style.display = 'block'
+    } else if (filteredDataBySearch.length <= itemsPerPage) {
+        console.log(filteredDataBySearch, itemsPerPage)
+        nextBtn.style.display = 'none'
+        prevBtn.style.display = 'none'
+
 
     }
 
@@ -288,13 +326,16 @@ async function generateTableData(page = 1, limit = 10, searchData = '', sortKey 
         doublePrevious.style.visibility = 'hidden';
     }
 
+
+
 }
 generateTableData()
 nextBtn.addEventListener('click', () => {
 
     if (currentPage < totalPage) {
-        currentPage++;
-        generateTableData(currentPage, itemsPerPage, '', sortKey, sortType);
+        // console.log(currentPage, "curr")
+        currentPage = currentPage + 1;
+        generateTableData(currentPage, itemsPerPage, '', sortKey, sortType, filterType);
     }
 
     // console.log("next")
@@ -302,8 +343,8 @@ nextBtn.addEventListener('click', () => {
 prevBtn.addEventListener('click', () => {
 
     if (currentPage > 1) {
-        currentPage--;
-        generateTableData(currentPage, itemsPerPage, '', sortKey, sortType);
+        currentPage = currentPage - 1;
+        generateTableData(currentPage, itemsPerPage, '', sortKey, sortType, filterType);
     }
 
     // console.log("prev")
@@ -312,7 +353,7 @@ doublePrevious.addEventListener('click', () => {
 
     if (currentPage > 2) {
         currentPage = 1;
-        generateTableData(currentPage, itemsPerPage, '', sortKey, sortType);
+        generateTableData(currentPage, itemsPerPage, '', sortKey, sortType, filterType);
     }
 
     // console.log("double")
@@ -341,6 +382,14 @@ searchBtn.addEventListener('click', (event) => {
 addUserToJsonData.addEventListener('click', () => {
     addUserBtn.textContent = "Add User"
     editUserBtn.style.display = "none"
+
+    addUserModalForm.elements['name'].value = '';
+    addUserModalForm.elements['address'].value = '';
+    addUserModalForm.elements['email'].value = '';
+    addUserModalForm.elements['phone'].value = '';
+    addUserModalForm.elements['job'].value = '';
+    addUserModalForm.elements['company'].value = '';
+    addUserModalForm.elements['birthdate'].value = '';
 })
 
 addUserBtn.addEventListener('click', async (event) => {
@@ -471,31 +520,46 @@ theadHeader.addEventListener('click', (event) => {
 
     sortKey = thElement.textContent.trim().toLowerCase();
 
-    
-    if(sortKey === 'birthdate'){
+
+    if (sortKey === 'birthdate') {
 
         if (countOfClickedSort === 0) {
             countOfClickedSort++;
             sortType = ENUMS.desc
-            generateTableData(1, 10, '', sortKey, sortType)
-    
+            generateTableData(1, 10, '', sortKey, sortType, filterType)
+
         } else if (countOfClickedSort === 1) {
             countOfClickedSort++;
             sortType = ENUMS.asc
-            generateTableData(1, 10, '', sortKey, sortType)
-    
+            generateTableData(1, 10, '', sortKey, sortType, filterType)
+
         } else {
-            countOfClickedSort=0;
+            countOfClickedSort = 0;
             sortType = ''
-            sortKey= ''
-            generateTableData(1, 10, '', sortKey, sortType)
-    
+            sortKey = ''
+            generateTableData(1, 10, '', sortKey, sortType, filterType)
+
         }
     }
-    
-   
-
-
-    console.log(countOfClickedSort,sortKey,sortType)
 
 })
+
+dropdownItems.forEach(item => {
+    item.addEventListener('click', function (event) {
+        event.preventDefault();
+        filterType = this.getAttribute('data-value').toLowerCase();
+
+        if (filterType === ENUMS.yes) {
+            dropdownButton.textContent = `Retired Status: ${this.textContent}`;
+            generateTableData(1, 10, '', sortKey, sortType, filterType);
+        } else if (filterType === ENUMS.no) {
+            dropdownButton.textContent = `Retired Status: ${this.textContent}`;
+            generateTableData(1, 10, '', sortKey, sortType, filterType)
+
+        } else {
+            dropdownButton.textContent = `Retired Status`;
+            generateTableData(1, 10, '', sortKey, sortType, '')
+
+        }
+    });
+});

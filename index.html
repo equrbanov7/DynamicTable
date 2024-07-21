@@ -24,12 +24,27 @@
             <button type="button" class="btn btn-success" id="addUserToJsonData" data-bs-toggle="modal"
                 data-bs-target="#exampleModal" data-bs-whatever="@fat">Add</button>
         </div>
+        <div class="container mb-2">
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false" id="dropdownFilterButton">
+                    Retired Status
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" data-value="Yes">Yes</a></li>
+                    <li><a class="dropdown-item" href="#" data-value="No">No</a></li>
+                    <li><a class="dropdown-item" href="#" data-value="">None</a></li>
+
+                </ul>
+            </div>
+        </div>
 
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">User Information</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -81,7 +96,7 @@
             </div>
         </div>
 
-        <table class="table table-dark table-striped table-hover">
+        <table class="table table-dark table-bordered table-striped table-hover" style="border-radius: 8px;">
             <thead class="align-middle" id="theadHeader">
                 <tr>
                     <th scope="col" class="text-lg-center">
@@ -96,11 +111,12 @@
                     <th scope="col" style="cursor: pointer;">
                         <div class="d-flex align-items-center">
                             Birthdate
-                            <img src="./Images/arrow-2.svg" alt="Arrow" style="height: 1em;" class="m-lg-2" id="sortIcon">
+                            <img src="./Images/arrow-2.svg" alt="Arrow" style="height: 1em;" class="m-lg-2"
+                                id="sortIcon">
                         </div>
                     </th>
                     <th scope="col"> Age </th>
-                    <th scope="col">Retired</th>
+                    <th scope="col" > Retired </th>
                     <th scope="col">Edit</th>
                     <th scope="col">Delete</th>
                 </tr>

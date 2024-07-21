@@ -353,15 +353,26 @@
       "id": 38
     },
     {
-      "name": "dsf",
+      "name": "Aysun",
+      "address": "Gadirli",
+      "email": "aysun@mail.ru",
+      "phone": "0505000000",
+      "job": "Data Scientist",
+      "company": "Google",
+      "birthdate": "1997-07-25",
+      "createUserDate": "2024-07-21T21:04:12.156Z",
+      "id": 40
+    },
+    {
+      "name": "Ayten",
       "address": "Binaqadi, 7th district, Bulding 11B, Flat 42",
-      "email": "elvin_qurbanov_00@list.ru",
-      "phone": "0707046474",
-      "job": "Customer service manager",
-      "company": "adfas",
-      "birthdate": "2024-07-02",
-      "createUserDate": "2024-07-21T17:25:14.660Z",
-      "id": 39
+      "email": "ayten0@list.ru",
+      "phone": "0707041494",
+      "job": "Account",
+      "company": "SHamans",
+      "birthdate": "1995-06-23",
+      "createUserDate": "2024-07-21T21:13:55.740Z",
+      "id": 41
     }
   ]
 }
