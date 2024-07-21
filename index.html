@@ -14,29 +14,95 @@
 
 <body>
 
-    <div class="container mt-2">
-        <div class="container mt-4 mb-2">
-            <form class="d-flex">
+    <div class="mt-2 ms-4 me-4">
+        <div class="container d-flex justify-content-between align-items-center gap-4 mt-4 mb-2">
+            <form class="d-flex flex-grow-1">
                 <input id="searchInput" class="form-control me-2" type="search" placeholder="Please write name or mail"
                     aria-label="Search">
                 <button id="searchBtn" class="btn btn-outline-success" type="submit">Search</button>
             </form>
+            <button type="button" class="btn btn-success" id="addUserToJsonData" data-bs-toggle="modal"
+                data-bs-target="#exampleModal" data-bs-whatever="@fat">Add</button>
         </div>
 
-        <table class="table table-dark table-striped">
-            <thead>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addUserModalForm">
+                            <div class="mb-3">
+                                <label for="name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                                <div class="invalid-feedback" id="nameError">Name is required.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="col-form-label">Address:</label>
+                                <input type="text" class="form-control" id="address" name="address" required>
+                                <div class="invalid-feedback" id="addressError">Address is required.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="col-form-label">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback" id="emailError">Email is required.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="col-form-label">Phone Number:</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                                <div class="invalid-feedback" id="phoneError">Phone Number is required.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="job" class="col-form-label">Job:</label>
+                                <input type="text" class="form-control" id="job" name="job" required>
+                                <div class="invalid-feedback" id="jobError">Job is required.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="company" class="col-form-label">Company:</label>
+                                <input type="text" class="form-control" id="company" name="company" required>
+                                <div class="invalid-feedback" id="companyError">Company is required.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="birthdate" class="col-form-label">Birthdate:</label>
+                                <input type="date" class="form-control" id="birthdate" name="birthdate" required>
+                                <div class="invalid-feedback" id="birthdateError">Birthdate is required.</div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="addUserBtn">Add User</button>
+                        <button type="button" class="btn btn-primary" id="editUserBtn">Save</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-dark table-striped table-hover">
+            <thead class="align-middle" id="theadHeader">
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col" class="text-lg-center">
+                        User <br> Id
+                    </th>
                     <th scope="col">Name</th>
                     <th scope="col">Address</th>
                     <th scope="col">Email</th>
                     <th scope="col">Phone Number</th>
                     <th scope="col">Job</th>
                     <th scope="col">Company</th>
-                    <th scope="col">Birthdate</th>
-                    <th scope="col">Age</th>
+                    <th scope="col" style="cursor: pointer;">
+                        <div class="d-flex align-items-center">
+                            Birthdate
+                            <img src="./Images/arrow-2.svg" alt="Arrow" style="height: 1em;" class="m-lg-2" id="sortIcon">
+                        </div>
+                    </th>
+                    <th scope="col"> Age </th>
                     <th scope="col">Retired</th>
-
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -59,14 +125,20 @@
             </div>
         </div>
 
-        
-        
+
+
 
 
     </div>
 
 
     <script src="index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>
